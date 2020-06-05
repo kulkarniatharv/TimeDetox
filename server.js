@@ -1,17 +1,8 @@
-const express = require('express');
+const http = require('http');
+const app = require('./app');
 
-const app = express();
+const port = process.env.PORT || 5000; // take the port from environmental var or assign 5000
 
-app.get('/api/customers', (req, res) => {
-  const customers = [
-    { id: 1, firstName: 'John', lastName: 'Doe' },
-    { id: 2, firstName: 'Brad', lastName: 'Traversy' },
-    { id: 3, firstName: 'Mary', lastName: 'Swanson' },
-  ];
+const server = http.createServer(app);
 
-  res.json(customers);
-});
-
-const port = 5000;
-
-app.listen(port, () => `Server running on port ${port}`);
+server.listen(port);

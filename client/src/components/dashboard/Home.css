@@ -1,0 +1,58 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr 2fr;
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas: "header header header""project-bar taskbar taskbar""footer footer footer";
+  column-gap: 10px;
+  row-gap: 15px;
+  width: 100vw;
+  height: 100vh;
+}
+
+.header {
+  grid-area: header;
+  background-color: #afafaf;
+}
+
+.taskbar {
+  grid-area: taskbar;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  /* divding the task input into 2 cols*/
+  grid-template-rows: auto 1fr;
+  /* auto for input section and 1fr for covering the rest of the area in taskbar */
+  grid-template-areas: "taskInput taskInput""recommend recent";
+  row-gap: 15px;
+  column-gap: 10px;
+}
+
+.taskInput {
+  grid-area: taskInput;
+  background-color: #cfcfcf;
+}
+
+.recommend {
+  grid-area: recommend;
+  background-color: #cfcfcf;
+}
+
+.recent {
+  grid-area: recent;
+  background-color: #cfcfcf;
+}
+
+
+.project-bar {
+  grid-area: project-bar;
+  background-color: #afafaf;
+}
+
+.footer {
+  grid-area: footer;
+}
