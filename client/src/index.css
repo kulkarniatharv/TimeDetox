@@ -1,0 +1,8 @@
+@font-face {
+  font-family: "FiraSans";
+  src: local("FiraSans"), url(./fonts/FiraSans-Regular.ttf) format("truetype");
+}
+
+body {
+  font-family: "FiraSans";
+}
