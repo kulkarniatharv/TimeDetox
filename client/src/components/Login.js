@@ -31,103 +31,129 @@ const login = props => {
 
   return (
     <div>
-      <Navbar bg="light" sticky="top">
-        <Navbar.Brand>{brand}</Navbar.Brand>
+      <Navbar bg="dark" sticky="top">
+        <Navbar.Brand style={{ color: 'white' }}>{brand}</Navbar.Brand>
       </Navbar>
 
-      <Formik
-        initialValues={{ username: '', password: '' }}
-        validationSchema={validationSchema}
-        onSubmit={(data, { setSubmitting }) => {
-          setSubmitting(true);
-
-          if (mode) {
-            auth.login(data).then(JWToken => {
-              if (JWToken) {
-                props.history.push('/');
-              } else if (!JWToken) {
-                setAuthErr(1);
-              }
-            });
-          } else if (!mode) {
-            auth.signup(data).then(JWToken => {
-              if (JWToken) {
-                props.history.push('/');
-              } else if (!JWToken) {
-                setAuthErr(2);
-              }
-            });
-          }
-
-          setSubmitting(false);
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
         }}
       >
-        {({ handleSubmit, isSubmitting, errors }) => (
-          <div className="form-container">
-            <Container>
-              {authErr === 1 ? (
-                <h3 style={{ color: 'red' }}>
-                  Authentication Failed. Try again
-                </h3>
-              ) : null}
+        <Formik
+          initialValues={{ username: '', password: '' }}
+          validationSchema={validationSchema}
+          onSubmit={(data, { setSubmitting }) => {
+            setSubmitting(true);
 
-              {authErr === 2 ? (
-                <h3 style={{ color: 'red' }}>
-                  Signup Failed. User already exists.
-                </h3>
-              ) : null}
+            if (mode) {
+              auth.login(data).then(JWToken => {
+                if (JWToken) {
+                  props.history.push({
+                    pathname: '/',
 
-              <Form noValidate onSubmit={handleSubmit}>
-                <Container>
-                  <Form.Row>
-                    <Form.Group as={Col} controlId="user_name" md="auto">
-                      <Form.Label>Username</Form.Label>
-                      <Field name="username" as={Form.Control} />
-                      <ErrorMessage
-                        component="div"
-                        name="username"
-                        className="input-feedback"
-                      />
-                    </Form.Group>
+                    state: { signup: false, projectExist: true },
+                  });
+                } else if (!JWToken) {
+                  setAuthErr(1);
+                }
+              });
+            } else if (!mode) {
+              auth.signup(data).then(JWToken => {
+                if (JWToken) {
+                  props.history.push({
+                    pathname: '/',
 
-                    <Form.Group as={Col} controlId="pwd" md="auto">
-                      <Form.Label>Password</Form.Label>
-                      <Field
-                        name="password"
-                        as={Form.Control}
-                        type="password"
-                      />
-                      <ErrorMessage
-                        component="div"
-                        name="password"
-                        className="input-feedback"
-                      />
-                    </Form.Group>
-                  </Form.Row>
+                    state: { signup: true, projectExist: false },
+                  });
+                } else if (!JWToken) {
+                  setAuthErr(2);
+                }
+              });
+            }
 
-                  <Form.Row>
-                    <Form.Group as={Col} controlId="submitBtn" md="auto">
-                      <Button
-                        variant="outline-success"
-                        type="submit"
-                        disabled={isSubmitting}
-                      >
-                        Submit
-                      </Button>
-                    </Form.Group>
-                  </Form.Row>
-                </Container>
-              </Form>
-            </Container>
+            setSubmitting(false);
+          }}
+        >
+          {({ handleSubmit, isSubmitting, errors }) => (
+            <div className="form-container">
+              <Container>
+                {authErr === 1 ? (
+                  <h3 style={{ color: 'red' }}>
+                    Authentication Failed. Try again
+                  </h3>
+                ) : null}
+
+                {authErr === 2 ? (
+                  <h3 style={{ color: 'red' }}>
+                    Signup Failed. User already exists.
+                  </h3>
+                ) : null}
+
+                <Form noValidate onSubmit={handleSubmit}>
+                  <Container>
+                    <Form.Row>
+                      <Form.Group as={Col} controlId="user_name" md="auto">
+                        <Form.Label style={{ color: 'white' }}>
+                          Username
+                        </Form.Label>
+                        <Field name="username" as={Form.Control} />
+                        <ErrorMessage
+                          component="div"
+                          name="username"
+                          className="input-feedback"
+                          style={{ color: 'white' }}
+                        />
+                      </Form.Group>
+                    </Form.Row>
+
+                    <Form.Row>
+                      <Form.Group as={Col} controlId="pwd" md="auto">
+                        <Form.Label style={{ color: 'white' }}>
+                          Password
+                        </Form.Label>
+                        <Field
+                          name="password"
+                          as={Form.Control}
+                          type="password"
+                        />
+                        <ErrorMessage
+                          component="div"
+                          name="password"
+                          className="input-feedback"
+                          style={{ color: 'white' }}
+                        />
+                      </Form.Group>
+                    </Form.Row>
+
+                    <Form.Row>
+                      <Form.Group as={Col} controlId="submitBtn" md="auto">
+                        <Button
+                          variant="outline-success"
+                          type="submit"
+                          disabled={isSubmitting}
+                        >
+                          Submit
+                        </Button>
+                      </Form.Group>
+                    </Form.Row>
+                  </Container>
+                </Form>
+              </Container>
+            </div>
+          )}
+        </Formik>
+        {mode === 1 ? (
+          <div style={{ color: 'white' }}>
+            Don't have an account?{' '}
+            <Link to="/signup">Click here to create one.</Link>
           </div>
-        )}
-      </Formik>
-      {mode === 1 ? (
-        <div>
-          Don't have an account?{' '}
-          <Link to="/signup">Click here to create one.</Link>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
     </div>
   );
 };

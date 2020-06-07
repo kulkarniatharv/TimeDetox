@@ -9,7 +9,7 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Axios from 'axios';
-import auth from '../../../Auth';
+import auth from '../../../../Auth';
 
 const TaskInput = props => {
   const validationSchema = Yup.object({
@@ -21,38 +21,27 @@ const TaskInput = props => {
   });
 
   return (
-    <div className="task-Input">
+    <div>
       <Formik
         initialValues={{ task: '', project: '', due: '' }}
         validationSchema={validationSchema}
         onSubmit={(data, { setSubmitting }) => {
           setSubmitting(true);
           const tempData = {
-            task: data.task,
-            due: new Date(data.due),
+            ...data,
+            done: false,
           };
 
           const token = auth.getJWT();
 
-          Axios.post('/tasks', tempData, {
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-          })
-            .then(res => console.log('Success ', res))
-            .catch(err => {
-              console.log(err);
-              props.history.push('/signin');
-            });
-
-          console.log(tempData);
+          props.AddTask(tempData, token);
           setSubmitting(false);
+          console.log(tempData);
         }}
       >
         {({ handleSubmit, isSubmitting }) => (
-          <Form noValidate onSubmit={handleSubmit}>
-            <Container fluid>
+          <div className="d-flex flex-row justify-content-center align-items-center task-Input">
+            <Form noValidate onSubmit={handleSubmit}>
               <Form.Row>
                 <Form.Group as={Col} controlId="taskInput" md="4">
                   <Field name="task" as={Form.Control} placeholder="Task" />
@@ -95,8 +84,8 @@ const TaskInput = props => {
                   </Button>
                 </Form.Group>
               </Form.Row>
-            </Container>
-          </Form>
+            </Form>
+          </div>
         )}
       </Formik>
     </div>

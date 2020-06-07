@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const tasksRoutes = require('./api/routes/tasks');
 const userRoutes = require('./api/routes/user');
+const projectsRoutes = require('./api/routes/projects');
 
 // Connect to Mongo DB 'test' using mongoose
 mongoose.connect('mongodb://localhost:27017/test', {
@@ -36,6 +37,7 @@ app.use((req, res, next) => {
 
 // Routing to specific routes
 app.use('/tasks', tasksRoutes);
+app.use('/projects', projectsRoutes);
 app.use('/user', userRoutes);
 
 // Error Handling

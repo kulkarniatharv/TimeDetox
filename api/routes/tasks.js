@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 
 const checkAuth = require('../middleware/check-auth');
 const Task = require('../models/tasks');
+const Project = require('../models/projects');
 
 // Get particular task by id
 router.get('/:taskId', checkAuth, (req, res, next) => {
@@ -38,7 +39,7 @@ router.get('/', checkAuth, (req, res, next) => {
       : null,
   };
   Task.find(query)
-    .select('_id task user due')
+    .select('_id task user due projectRelated done')
     .exec()
     .then(docs => {
       const response = {
@@ -47,6 +48,8 @@ router.get('/', checkAuth, (req, res, next) => {
           id: doc._id,
           task: doc.task,
           due: doc.due,
+          project: doc.projectRelated,
+          done: doc.done,
           url: {
             request: {
               type: 'GET',
@@ -65,31 +68,58 @@ router.get('/', checkAuth, (req, res, next) => {
 
 // Create a new product
 router.post('/', checkAuth, (req, res, next) => {
-  const { task, due } = req.body;
+  const { task, due, project, done } = req.body;
+
+  const projectQuery = {
+    $and: [
+      { user: { $regex: req.userData.username, $options: 'i' } },
+      { project },
+    ],
+  };
 
   const newTask = new Task({
     _id: new mongoose.Types.ObjectId(),
     task,
     user: req.userData.username,
     due,
+    projectRelated: project,
+    done,
   });
 
-  newTask
-    .save()
-    .then(result => {
-      console.log(req.userData);
-      res.status(201).json({
-        _id: result._id,
-        task: result.task,
-        user: result.user,
-        due: result.due,
-        url: {
-          request: {
-            type: 'GET',
-            url: `/tasks/${result._id}`,
-          },
-        },
-      });
+  // finding the project to push this task
+  Project.find(projectQuery)
+    .exec()
+    .then(doc => {
+      console.log(doc);
+      doc[0].tasks.push(newTask._id);
+      console.log('Added to Project', doc);
+      Project.update(projectQuery, { $set: doc[0] })
+        .then(UpdateResult => {
+          console.log(UpdateResult);
+          newTask
+            .save()
+            .then(result => {
+              res.status(201).json({
+                _id: result._id,
+                task: result.task,
+                user: result.user,
+                due: result.due,
+                project: result.projectRelated,
+                done: result.done,
+                url: {
+                  request: {
+                    type: 'GET',
+                    url: `/tasks/${result._id}`,
+                  },
+                },
+              });
+            })
+            .catch(err => {
+              console.log(err);
+              res.status(500).json({ error: err });
+            });
+        })
+        .catch(err => console.log(err));
     })
     .catch(err => {
       console.log(err);
@@ -101,6 +131,16 @@ router.post('/', checkAuth, (req, res, next) => {
 router.delete('/:taskId', checkAuth, (req, res, next) => {
   const id = req.params.taskId;
   Task.remove({ _id: id, user: req.userData.username })
+    .exec()
+    .then(result => res.status(200).json({ message: 'Task was deleted' }))
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ error: err });
+    });
+});
+
+router.delete('/', checkAuth, (req, res, next) => {
+  Task.remove({ user: req.userData.username })
     .exec()
     .then(result => res.status(200).json({ message: 'Task was deleted' }))
     .catch(err => {
@@ -134,4 +174,5 @@ router.patch('/:taskId', checkAuth, (req, res, next) => {
       res.status(500).json({ error: err });
     });
 });
+
 module.exports = router;
