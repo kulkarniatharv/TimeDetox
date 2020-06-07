@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import React from 'react';
+import React, { useState } from 'react';
 import './ProjectBar.css';
 import { Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -14,13 +14,21 @@ import auth from '../../../Auth';
 
 const ProjectBar = props => {
   const { projects } = props;
+
+  const [Projects, setProjects] = useState([]);
+
   const validationSchema = Yup.object({
     project: Yup.string().required('Required'),
   });
 
   return (
     <div className="projectbarLayout">
-      <ProjectsList projects={projects} />
+      {Projects.length !== 0 ? (
+        <ProjectsList projects={Projects} />
+      ) : (
+        <ProjectsList projects={projects} />
+      )}
+
       <Formik
         initialValues={{ project: '' }}
         validationSchema={validationSchema}
@@ -37,6 +45,19 @@ const ProjectBar = props => {
           })
             .then(res => {
               console.log('Success ', res);
+              Axios.get('/projects', {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${token}`,
+                },
+              })
+                .then(result => {
+                  setProjects([...result.data]);
+                  console.log('Projects received in project bar ', result.data);
+                })
+                .catch(err => {
+                  console.log(err);
+                });
               setSubmitting(false);
             })
             .catch(err => {

@@ -63,27 +63,32 @@ const TaskDisplayer = props => {
     });
   });
 
+  let filteredTasks = tasks.filter(task => {
+    console.log(task.task);
+    return task.task !== 'temp';
+  });
+
+  filteredTasks = tasks.map(task => (
+    <li key={task._id} className="list-items">
+      <span style={{ color: 'white' }}>
+        {task.task} <br /> Due: {task.due.slice(0, 10)}
+      </span>
+
+      <div className="delete">
+        <svg viewBox="0 0 22 22">
+          <a href="#" onClick={() => remove(task._id, token)}>
+            <circle cx="11" cy="11" r="10" />
+          </a>
+        </svg>
+      </div>
+    </li>
+  ));
+
   return (
     <div className="displayer">
       <h3 className="project-heading">{project}</h3>
 
-      <ul className="deleteList">
-        {tasks.map(task => (
-          <li key={task._id} className="list-items">
-            <span style={{ color: 'white' }}>
-              {task.task} <br /> Due: {task.due.slice(0, 10)}
-            </span>
-
-            <div className="delete">
-              <svg viewBox="0 0 22 22">
-                <a href="#" onClick={() => remove(task._id, token)}>
-                  <circle cx="11" cy="11" r="10" />
-                </a>
-              </svg>
-            </div>
-          </li>
-        ))}
-      </ul>
+      <ul className="deleteList">{filteredTasks}</ul>
     </div>
   );
 };

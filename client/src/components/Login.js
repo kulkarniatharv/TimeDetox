@@ -106,6 +106,7 @@ const login = props => {
                           component="div"
                           name="username"
                           className="input-feedback"
+                          style={{ color: 'white' }}
                         />
                       </Form.Group>
                     </Form.Row>
@@ -124,6 +125,7 @@ const login = props => {
                           component="div"
                           name="password"
                           className="input-feedback"
+                          style={{ color: 'white' }}
                         />
                       </Form.Group>
                     </Form.Row>

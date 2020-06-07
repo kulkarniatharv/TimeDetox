@@ -15,33 +15,8 @@ import auth from '../../Auth';
 
 const home = props => {
   const { location } = props;
-  const [Projects, setProjects] = useState([]);
-
-  // location.state;
-
-  // let sorted = false;
-  // function dynamicSort(property) {
-  //   let sortOrder = 1;
-
-  //   if (property[0] === '-') {
-  //     sortOrder = -1;
-  //     property = property.substr(1);
-  //   }
-
-  //   return function(a, b) {
-  //     if (sortOrder === -1) {
-  //       return b[property].localeCompare(a[property]);
-  //     }
-  //     return a[property].localeCompare(b[property]);
-  //   };
-  // }
-
-  // const sortProjects = array => {
-  //   array.map(project => project.tasks.sort(dynamicSort('due')));
-  //   sorted = true;
-  // };
-
-  console.log(location, location.state === null);
+  const [projects, setProjects] = useState([]);
+  const [projectExist, setProjectsExist] = useState(false);
 
   // sending the AJAX request after each render
   useEffect(() => {
@@ -56,7 +31,10 @@ const home = props => {
     })
       .then(res => {
         console.log('Projects received ', res.data);
-        setProjects(res.data);
+        if (res.data.length !== 0) {
+          setProjects(res.data);
+          setProjectsExist(true);
+        }
       })
       .catch(err => {
         console.log(err);
@@ -65,9 +43,7 @@ const home = props => {
 
   return (
     <div>
-      {Projects.length !== 0 ||
-      location.state.signup ||
-      location.state.projectExist ? (
+      {projects.length !== 0 || location.state.signup || !projectExist ? (
         <div className="layout">
           <div className="header">
             <Navbar bg="dark" sticky="top">
@@ -83,11 +59,11 @@ const home = props => {
           </div>
 
           <div className="project-bar">
-            <ProjectBar projects={Projects} />
+            <ProjectBar projects={projects} />
           </div>
 
           <div className="taskbar">
-            <TaskBar projects={Projects} />
+            <TaskBar projects={projects} />
           </div>
 
           <div className="footer">

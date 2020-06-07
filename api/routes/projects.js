@@ -38,7 +38,7 @@ router.get('/', checkAuth, (req, res, next) => {
 
   Project.find(query)
     .populate('tasks', 'task due done')
-    .select('tasks, project')
+    .select('tasks project user')
     .exec()
     .then(docs => {
       res.status(200).json(docs);
@@ -52,6 +52,13 @@ router.get('/', checkAuth, (req, res, next) => {
 // Create a new project
 router.post('/', checkAuth, (req, res, next) => {
   const { project } = req.body;
+  const { username } = req.userData;
+  // const query = {
+  //   $and: [
+  //     { user: { $regex: req.userData.username, $options: 'i' } },
+  //     { project },
+  //   ],
+  // };
 
   const tempTask = new Task({
     _id: new mongoose.Types.ObjectId(),
@@ -61,7 +68,7 @@ router.post('/', checkAuth, (req, res, next) => {
     projectRelated: project,
     done: false,
   });
-  Project.find({ project })
+  Project.find({ user: username, project })
     .exec()
     .then(userResult => {
       if (userResult.length > 0) {
