@@ -1,0 +1,16 @@
+.project-list {
+  padding: 1rem;
+  list-style: none;
+  text-align: center;
+}
+
+.project-list li {
+  border-radius: 1.5rem;
+  border: 2px solid rgb(33, 173, 150);
+  margin: 0.5rem;
+}
+
+.project-list li:hover {
+  /* opacity: 0.5; */
+  background-color: rgba(93, 231, 201, 0.5);
+}

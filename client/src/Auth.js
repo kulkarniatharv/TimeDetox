@@ -29,7 +29,6 @@ class Auth {
   }
 
   getJWT() {
-    console.log('this.auth', this.authenticated);
     if (this.authenticated) {
       return localStorage.getItem('TimeDetoxToken');
     }

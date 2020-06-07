@@ -1,0 +1,155 @@
+.displayer {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.project-heading {
+  text-align: center;
+  border: 2px solid rgb(33, 173, 150);
+  color: white;
+  border-radius: 25px;
+}
+
+.project-heading:hover {
+  background-color: rgba(93, 231, 201, 0.5);
+}
+
+.list-items {
+  text-align: left;
+  padding: 0.3rem;
+  color: white;
+  border-left: 2px solid rgb(33, 173, 150);
+}
+
+.deleteList {
+  margin: 1rem;
+  padding: 0;
+  list-style: none;
+}
+
+.deleteList li {
+  position: relative;
+  line-height: 24px;
+  margin: 0 0 12px 0;
+  font-weight: bold;
+  color: #212533;
+  display: -webkit-box;
+}
+
+.deleteList li span {
+  display: block;
+  overflow: hidden;
+  -webkit-transition: opacity .5s ease .3s, -webkit-transform .3s ease .1s;
+  transition: opacity .5s ease .3s, -webkit-transform .3s ease .1s;
+  transition: transform .3s ease .1s, opacity .5s ease .3s;
+  transition: transform .3s ease .1s, opacity .5s ease .3s, -webkit-transform .3s ease .1s;
+}
+
+.deleteList li .line {
+  border-radius: 2px;
+  background: #F26175;
+  height: 2px;
+  margin: -1px 0 0 0;
+  top: 50%;
+  right: 6px;
+  position: absolute;
+  z-index: 1;
+}
+
+.deleteList li .delete {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  opacity: .5;
+  filter: url("data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg'&gt;&lt;filter id='grayscale'&gt;&lt;feColorMatrix type='matrix' values='0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0'/&gt;&lt;/filter&gt;&lt;/svg&gt;#grayscale");
+  filter: gray;
+  -webkit-filter: grayscale(100%);
+  -webkit-transition: all .3s ease;
+  transition: all .3s ease;
+}
+
+.deleteList li .delete svg {
+  display: block;
+  width: 20px;
+  fill: none;
+  height: 20px;
+  stroke: #F26175;
+  stroke-width: 2;
+  -webkit-transition: all .3s ease;
+  transition: all .3s ease;
+}
+
+.deleteList li .delete svg circle {
+  stroke-dasharray: 64;
+  -webkit-transition: all .3s ease;
+  transition: all .3s ease;
+}
+
+.deleteList li .delete:before,
+.deleteList li .delete:after {
+  content: '';
+  display: block;
+  position: absolute;
+  border-radius: 2px;
+  background: #F26175;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translate(-50%, -50%) rotate(135deg);
+  transform: translate(-50%, -50%) rotate(135deg);
+  -webkit-transition: all .3s ease;
+  transition: all .3s ease;
+}
+
+.deleteList li .delete:before {
+  width: 10px;
+  height: 2px;
+}
+
+.deleteList li .delete:after {
+  height: 10px;
+  width: 2px;
+}
+
+.deleteList li .delete.active svg circle {
+  stroke-dashoffset: 64;
+}
+
+.deleteList li .delete.active:before,
+.deleteList li .delete.active:after {
+  -webkit-transform: translate(-50%, -50%) rotate(0deg);
+  transform: translate(-50%, -50%) rotate(0deg);
+}
+
+.deleteList li .delete.active:after {
+  opacity: 0;
+}
+
+.deleteList li .delete:hover,
+.deleteList li .delete.hover {
+  filter: url("data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg'&gt;&lt;filter id='grayscale'&gt;&lt;feColorMatrix type='matrix' values='1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 1 0'/&gt;&lt;/filter&gt;&lt;/svg&gt;#grayscale");
+  -webkit-filter: grayscale(0%);
+  opacity: 1;
+}
+
+.deleteList li.slice span {
+  opacity: 0;
+}
+
+.deleteList li.slice span:nth-child(1) {
+  -webkit-transform: rotate(-7deg) translate(0, -3px);
+  transform: rotate(-7deg) translate(0, -3px);
+}
+
+.deleteList li.slice span:nth-child(2) {
+  -webkit-transform: rotate(7deg) translate(0, 2px);
+  transform: rotate(7deg) translate(0, 2px);
+}
+
+.deleteList li.beforeSlice .delete:before,
+.deleteList li.beforeSlice .delete:after {
+  display: none;
+}
